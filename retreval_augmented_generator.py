@@ -43,7 +43,7 @@ class handler():
                     
                     sentence = "\n".join(sentences)
                     references += f"\n- {doc_name}\n{sentence}"
-                return ("rag_prompt", self.sum_prompt_generator(summary_dic), references)
+                return ("rag_prompt", self.sum_prompt_generator(references), references)
  
             else:
                 return ("chat_prompt", self.sum_prompt_generator(summary_dic))
@@ -53,29 +53,6 @@ class handler():
             return ("error", f"エラーが発生しました。\n```{e}```")
 
         importlib.reload(config)
-        
-    def retrieve(self, user_input):    
-        try:
-    
-            self.user_input = user_input
-
-            similarities, indices = self.search_index([self.user_input])
-            summary_dic = self.create_dictionary_for_summary(similarities, indices, config.emb_top_k*2)
-            references = ""
-
-            for doc_name, sentences in summary_dic.items():
-                for n, sentence in enumerate(sentences):
-                    if not "|-|" in sentences[n]:
-                        sentences[n] =f"```\n{sentences[n]}\n```"
-                
-                sentence = "\n".join(sentences)
-                references += f"\n- {doc_name}\n{sentence}"
-            return references
-
-        except Exception as e:
-            print(e)
-            return ("error", f"エラーが発生しました。\n```{e}```")
-
 
     def search_index(self, queries):
         query_embeddings = self.emb.encode(queries)
@@ -121,30 +98,18 @@ class handler():
                         
         return summary_dic
 
-    
-    def create_retreval_sentences(self, dic):
-        retreval_sentences = ""
-        for doc_name, sentence in dic.items():
-            retreval_sentences += f"""ファイル名: {doc_name}
-{sentence}
-            
-"""
-        return retreval_sentences
 
-
-    def sum_prompt_generator(self, dic):
+    def sum_prompt_generator(self, references):
         user_input = re.sub(r"[？?]", "", self.user_input)
-        
-        retreval_sentences = self.create_retreval_sentences(dic)
 
-        if retreval_sentences:
+        if references:
             return f"""質問に対して、文章に基づいた回答をしてください。
 
 質問:
 {user_input}
 
 文章:
-{retreval_sentences}
+{references}
 """
         else:
             return self.user_input
