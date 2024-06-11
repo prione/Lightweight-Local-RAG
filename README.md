@@ -31,6 +31,6 @@ pip install numpy request llama-cpp-python sentence_transformers nltk faiss Spir
 
 1. main.pyを起動
 
-2. Slackやmattermost上でスラッシュコマンド(デフォルトでは /bot)を文頭につけてチャット
+2. Slackやmattermost上でスラッシュコマンド(デフォルトでは /chatや/question)を文頭につけてチャット
 
 <img src=https://github.com/prione/Lightweight-Local-RAG/assets/92021420/a0b10b24-efdd-4671-8a8c-05f83091866c width="40%" />
