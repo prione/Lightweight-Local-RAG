@@ -28,15 +28,11 @@ def get_chat():
       
     post_wait(bot.is_active, data)
 
-    if data["command"] == "/test":
+    if data["command"] == "/question":
         q.put(["test",data])
     
-    elif data["command"] == "/bot":
-        q.put(["bot",data])
-    
-    elif data["command"] == "/s":
-        q.put(["search",data])
-    
+    elif data["command"] == "/chat":
+        q.put(["bot",data])    
     
     return jsonify({"response_type": "in_channel", "text": data["text"]})
    
