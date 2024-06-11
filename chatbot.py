@@ -153,11 +153,11 @@ class bot():
                         if who[-1] == "ASSISTANT":
                             messages.append(["USER",data["text"]])
 
-                        if mode == "test":
+                        if mode == "chat":
 
                             self.chat(messages, channel_id, root_id, config.rag_temperature, config.rag_top_p)
 
-                        elif mode == "bot":
+                        elif mode == "question":
                             rag_prompt = self.rag.generate(data["text"])
 
                             if rag_prompt[0] == "rag_prompt":
@@ -170,11 +170,7 @@ class bot():
                                 self.chat(messages, channel_id, root_id, config.chat_temperature, config.chat_top_p)                            
 
                             elif rag_prompt[0] == "error":
-                                api.api.create_post(channel_id, rag_prompt[1], root_id)
-                                
-                        elif mode == "search":
-                            references = self.rag.retrieve(data["text"])
-                            self.post_reference(mode, channel_id, root_id, references)                            
+                                api.api.create_post(channel_id, rag_prompt[1], root_id)                      
                                 
                 except Exception as e:
                     print(e)
